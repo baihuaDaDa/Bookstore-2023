@@ -9,16 +9,16 @@ using std::ifstream;
 using std::ofstream;
 
 template<class T, int info_len = 2>
-class MemoryRiver {
+class memoryRiver {
 private:
     /* your code here */
     fstream file;
     string file_name;
     int sizeofT = sizeof(T);
 public:
-    MemoryRiver() = default;
+    memoryRiver() = default;
 
-    MemoryRiver(const string &file_name) : file_name(file_name) {}
+    memoryRiver(const string &file_name) : file_name(file_name) {}
 
     bool file_exist() {
         ifstream tmp_file(file_name);

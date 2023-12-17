@@ -7,9 +7,8 @@ add_executable(code
         main.cpp
         include/System/system.cpp
         include/System/system.hpp
-        include/Memory/Memory.cpp
-        include/Memory/Memory.h
-        include/Memory/MemoryRiver.h
+        include/Memory/memory.h
+        include/Memory/memoryRiver.h
         include/Book/book.cpp
         include/Book/book.hpp
         include/User/user.cpp
