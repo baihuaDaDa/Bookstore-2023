@@ -12,4 +12,5 @@ add_executable(code
         include/Book/book.cpp
         include/Book/book.hpp
         include/User/user.cpp
-        include/User/user.hpp)
+        include/User/user.hpp
+        include/constantLengthString.h)

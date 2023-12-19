@@ -7,8 +7,8 @@
 #include <vector>
 
 template<class INDEX, class VALUE,
-        int (*cmp_index)(const INDEX &, const INDEX &),
-        int (*cmp_value)(const VALUE &, const VALUE &)>
+        int (*CmpIndex)(const INDEX &, const INDEX &),
+        int (*CmpValue)(const VALUE &, const VALUE &)>
 class memory {
 
 private:
@@ -45,11 +45,11 @@ private:
     int head_pos = sizeof(int), tail_pos = sizeof(int) + sizeof(BlockNode);
 
     static int cmp_pair(const Pair &a, const Pair &b) {
-        int flag = cmp_index(a.index, b.index);
+        int flag = CmpIndex(a.index, b.index);
         if (flag) {
             return flag;
         }
-        return cmp_value(a.value, b.value);
+        return CmpValue(a.value, b.value);
     }
 
     int FindElement(const Pair &element) {
@@ -309,7 +309,7 @@ public:
             file.read(reinterpret_cast<char *>(data), sizeof(Pair) * now.size);
             file.close();
             for (i = 0; i < now.size; i++) {
-                if (cmp_string(data[i].index, index) == 0) {
+                if (CmpIndex(data[i].index, index) == 0) {
                     flag = true;
                     total_flag = true;
                     std::cout << data[i].value << ' ';
@@ -327,11 +327,6 @@ public:
         }
         std::cout << '\n';
     }
-
-    int get_num_of_block() const {
-        return num_of_block;
-    }
-
 };
 
 #endif //INC_2074_MEMORY_H
