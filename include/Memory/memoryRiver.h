@@ -18,6 +18,8 @@ private:
 public:
     memoryRiver() = default;
 
+    ~memoryRiver() = default;
+
     memoryRiver(const string &file_name) : file_name(file_name) {}
 
     bool file_exist() {

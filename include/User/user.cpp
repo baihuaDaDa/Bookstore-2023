@@ -1,5 +1,11 @@
-//
-// Created by zwg_w on 2023/12/16.
-//
-
 #include "user.hpp"
+
+int CmpUserInfo(const UserInfo &lhs, const UserInfo &rhs) {
+    int flag_password = CmpStr(lhs.password, rhs.password);
+    if (flag_password < 0) return -1;
+    if (flag_password > 0) return 1;
+    int flag_username = CmpStr(lhs.username, rhs.username);
+    if (flag_username < 0) return -1;
+    if (flag_username > 0) return 1;
+    return 0;
+}

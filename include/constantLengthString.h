@@ -3,8 +3,8 @@
 
 #include <exception>
 #include <cstring>
-
-
+#include <iostream>
+#include <string>
 
 class StringIndexingError : public std::exception {
 public:
@@ -16,7 +16,7 @@ public:
 template<int length>
 class ConstLenStr {
 private:
-    char str[length];
+    char str[length] = {};
 
 public:
     friend int CmpStr(const ConstLenStr<length> &lhs,

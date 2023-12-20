@@ -3,8 +3,6 @@
 
 #include "memoryRiver.h"
 #include <iostream>
-#include <set>
-#include <vector>
 
 template<class INDEX, class VALUE,
         int (*CmpIndex)(const INDEX &, const INDEX &),
@@ -89,6 +87,9 @@ private:
     string element_file_name;
 
 public:
+    memory() = default;
+
+    ~memory() = default;
 
     memory(const string &blockNode_file_name, const string &element_file_name)
             : memory_BlockNode(blockNode_file_name), memory_element(element_file_name), element_file_name(element_file_name) {

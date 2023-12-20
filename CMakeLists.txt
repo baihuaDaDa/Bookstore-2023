@@ -13,4 +13,6 @@ add_executable(code
         include/Book/book.hpp
         include/User/user.cpp
         include/User/user.hpp
-        include/constantLengthString.h)
+        include/constantLengthString.h
+        include/InstructionScanner/instructionScanner.hpp
+        include/InstructionScanner/instructionScanner.cpp)

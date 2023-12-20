@@ -2,9 +2,7 @@
 #define BOOKSTORE_2023_USER_HPP
 
 #include <vector>
-#include "../Memory/memory.h"
 #include "../Book/book.hpp"
-#include "../constantLengthString.h"
 
 enum Privilege {
     VISITOR = 0,
@@ -13,87 +11,104 @@ enum Privilege {
     SHOPKEEPER = 7
 };
 
+struct UserInfo {
+    ConstLenStr<31> password; // 合法字符集：数字， 字母， 下划线
+    ConstLenStr<31> username; // 除不可见以外的ASCII字符
+
+    UserInfo() = default;
+
+    ~UserInfo() = default;
+
+    UserInfo(const ConstLenStr<31> &_password, const ConstLenStr<31> &_username)
+            : password(_password), username(_username) {}
+};
+
+int CmpUserInfo(const UserInfo &, const UserInfo &);
+
 class User {
 private:
 
     static std::vector<User *> user_list;
+
     ConstLenStr<31> ID; // 合法字符集：数字、字母、下划线（修改密码时的原密码和新密码也是如此）
-
-    struct UserInfo {
-        ConstLenStr<31> password; // 合法字符集：数字， 字母， 下划线
-        ConstLenStr<31> username; // 除不可见以外的ASCII字符
-
-        UserInfo() = default;
-
-        ~UserInfo() = default;
-
-        UserInfo(char *_password, char *_username) : password(_password), username(_username) {}
-    };
-
     UserInfo user_info;
-
-    static int CmpUserInfo(const UserInfo &lhs, const UserInfo &rhs) {
-        int flag_password = CmpStr(lhs.password, rhs.password);
-        if (flag_password < 0) return -1;
-        if (flag_password > 0) return 1;
-        int flag_username = CmpStr(lhs.username, rhs.username);
-        if (flag_username < 0) return -1;
-        if (flag_username > 0) return 1;
-        return 0;
-    }
-
-    static memory<ConstLenStr<31>, UserInfo, CmpStr<31>, CmpUserInfo> user_memory;
-
 
 public:
     User() = default;
 
-
+    User(const ConstLenStr<31> &ID, const UserInfo &user_info) : ID(ID), user_info(user_info) {}
 
     virtual Privilege GetType();
 
-    virtual void Log(char *userID, char *_password = "");
+    virtual void Log(ConstLenStr<31> &userID, ConstLenStr<31> &_password);
 
     virtual ~User() = default;
 
-    void Register(char *userID, char *_password, char *_username);
+    void Register(ConstLenStr<31> &userID, ConstLenStr<31> &_password, ConstLenStr<31> &_username);
 };
 
 class Customer : public User {
 public:
+    Customer() = default;
+
+    Customer(const ConstLenStr<31> &ID, const UserInfo &user_info) : User(ID, user_info) {}
+
     virtual Privilege GetType() override;
 
-    virtual void Log(char *userID, char *_password = "") override;
+    virtual void Log(ConstLenStr<31> &userID, ConstLenStr<31> &_password) override;
 
-    ~Customer();
+    ~Customer() override = default;
 
     void Logout();
 
-    void Passwd(char *userID, char *current_password, char *New_password);
+    void Passwd(ConstLenStr<31> &userID, ConstLenStr<31> &current_password, ConstLenStr<31> &New_password);
 
-    void Show(char *info, )
+    void Show(ConstLenStr<61> &info, BookInfoType info_type);
+
+    void Buy(ConstLenStr<21> &ISBN, int quantity);
 };
 
 class Employee : public Customer {
+private:
+    ConstLenStr<21> ISBN;
+
 public:
+    Employee() = default;
+
+    Employee(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &ISBN)
+            : Customer(ID, user_info), ISBN(ISBN) {}
+
     virtual Privilege GetType() override;
 
-    virtual void Log(char *userID, char *_password = "") override;
+    virtual void Log(ConstLenStr<31> &userID, ConstLenStr<31> &_password) override;
 
-    ~Employee();
+    ~Employee() override = default;
 
-    void Useradd(char *userID, char *_password, int privilege, char *_username);
+    void Useradd(ConstLenStr<31> &userID, ConstLenStr<31> &_password, int privilege, ConstLenStr<31> &_username);
+
+    void Select(ConstLenStr<21> &_ISBN);
+
+    void Modify(ConstLenStr<61> &info, BookInfoType info_type);
+
+    void Import(int quantity, double total_cost);
 };
 
 class Shopkeeper : public Employee {
 public:
-    Privilege GetType() override;
+    Shopkeeper() = default;
 
-    void Log(char *userID, char *_password = "") override;
+    Shopkeeper(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &ISBN)
+            : Employee(ID, user_info, ISBN) {}
 
-    ~Shopkeeper();
+    virtual Privilege GetType() override;
 
-    void Delete(char *userID);
+    virtual void Log(ConstLenStr<31> &userID, ConstLenStr<31> &_password) override;
+
+    ~Shopkeeper() override = default;
+
+    void Delete(ConstLenStr<31> &userID);
+
+    void ShowFinance(int count = -1);
 };
 
 #endif //BOOKSTORE_2023_USER_HPP
