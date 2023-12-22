@@ -2,7 +2,7 @@
 #define BOOKSTORE_2023_USER_HPP
 
 #include <vector>
-#include "../Book/book.hpp"
+#include "../System/system.hpp"
 
 enum Privilege {
     VISITOR = 0,
@@ -11,23 +11,9 @@ enum Privilege {
     SHOPKEEPER = 7
 };
 
-struct UserInfo {
-    ConstLenStr<31> password; // 合法字符集：数字， 字母， 下划线
-    ConstLenStr<31> username; // 除不可见以外的ASCII字符
-
-    UserInfo() = default;
-
-    ~UserInfo() = default;
-
-    UserInfo(const ConstLenStr<31> &_password, const ConstLenStr<31> &_username)
-            : password(_password), username(_username) {}
-};
-
-int CmpUserInfo(const UserInfo &, const UserInfo &);
-
 class User {
 private:
-
+    static System system;
     static std::vector<User *> user_list;
 
     ConstLenStr<31> ID; // 合法字符集：数字、字母、下划线（修改密码时的原密码和新密码也是如此）
@@ -65,18 +51,18 @@ public:
 
     void Show(ConstLenStr<61> &info, BookInfoType info_type);
 
-    void Buy(ConstLenStr<21> &ISBN, int quantity);
+    void Buy(ConstLenStr<21> &isbn, int quantity);
 };
 
 class Employee : public Customer {
 private:
-    ConstLenStr<21> ISBN;
+    ConstLenStr<21> isbn;
 
 public:
     Employee() = default;
 
-    Employee(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &ISBN)
-            : Customer(ID, user_info), ISBN(ISBN) {}
+    Employee(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &isbn)
+            : Customer(ID, user_info), isbn(isbn) {}
 
     virtual Privilege GetType() override;
 
@@ -86,9 +72,9 @@ public:
 
     void Useradd(ConstLenStr<31> &userID, ConstLenStr<31> &_password, int privilege, ConstLenStr<31> &_username);
 
-    void Select(ConstLenStr<21> &_ISBN);
+    void Select(ConstLenStr<21> &_isbn);
 
-    void Modify(ConstLenStr<61> &info, BookInfoType info_type);
+    void Modify(BookInfo **revise_set);
 
     void Import(int quantity, double total_cost);
 };
@@ -97,8 +83,8 @@ class Shopkeeper : public Employee {
 public:
     Shopkeeper() = default;
 
-    Shopkeeper(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &ISBN)
-            : Employee(ID, user_info, ISBN) {}
+    Shopkeeper(const ConstLenStr<31> &ID, const UserInfo &user_info, const ConstLenStr<21> &isbn)
+            : Employee(ID, user_info, isbn) {}
 
     virtual Privilege GetType() override;
 

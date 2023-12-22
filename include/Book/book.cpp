@@ -15,23 +15,10 @@ int ISBNIndexingCmp(const ISBNIndexingInfo &lhs, const ISBNIndexingInfo &rhs) {
     return 0;
 }
 
-int BookNameIndexingCmp(const BookNameIndexingInfo &lhs, const BookNameIndexingInfo &rhs) {
-    int flag_ISBN = CmpStr(lhs.ISBN, rhs.ISBN);
-    if (flag_ISBN < 0) return -1;
-    if (flag_ISBN > 0) return 1;
-    return 0;
-}
-
-int AuthorNameIndexingCmp(const AuthorNameIndexingInfo &lhs, const AuthorNameIndexingInfo &rhs) {
-    int flag_ISBN = CmpStr(lhs.ISBN, rhs.ISBN);
-    if (flag_ISBN < 0) return -1;
-    if (flag_ISBN > 0) return 1;
-    return 0;
-}
-
-int KeywordIndexingCmp(const KeywordIndexingInfo &lhs, const KeywordIndexingInfo &rhs) {
-    int flag_ISBN = CmpStr(lhs.ISBN, rhs.ISBN);
-    if (flag_ISBN < 0) return -1;
-    if (flag_ISBN > 0) return 1;
+template<class INDEXING>
+int NonISBNIndexingCmp(const INDEXING &lhs, const INDEXING &rhs) {
+    int flag_isbn = CmpStr(lhs.isbn, rhs.isbn);
+    if (flag_isbn < 0) return -1;
+    if (flag_isbn > 0) return 1;
     return 0;
 }

@@ -3,7 +3,6 @@
 
 #include "../constantLengthString.h"
 #include "../Memory/memory.h"
-#include "../User/user.hpp"
 
 enum BookInfoType {
     ISBN,
@@ -25,11 +24,11 @@ public:
 
 class ISBNNumber : public BookInfo {
 public:
-    ConstLenStr<21> ISBN; // 除不可见字符以外的ASCII字符
+    ConstLenStr<21> isbn; // 除不可见字符以外的ASCII字符
 
     ISBNNumber() = default;
 
-    ISBNNumber(BookInfoType info_type, const ConstLenStr<21> &ISBN) : BookInfo(info_type), ISBN(ISBN) {}
+    ISBNNumber(BookInfoType info_type, const ConstLenStr<21> &isbn) : BookInfo(info_type), isbn(isbn) {}
 };
 
 class BookName : public BookInfo {
@@ -86,53 +85,50 @@ struct ISBNIndexingInfo {
 int ISBNIndexingCmp(const ISBNIndexingInfo &, const ISBNIndexingInfo &);
 
 struct BookNameIndexingInfo {
-    ConstLenStr<21> ISBN;
+    ConstLenStr<21> isbn;
     ConstLenStr<61> author_name;
     ConstLenStr<61> keyword;
     double price;
 
     BookNameIndexingInfo() = default;
 
-    BookNameIndexingInfo(const ConstLenStr<21> &ISBN, const ConstLenStr<61> &author_name,
+    BookNameIndexingInfo(const ConstLenStr<21> &isbn, const ConstLenStr<61> &author_name,
                          const ConstLenStr<61> &keyword, const double &price)
-            : ISBN(ISBN), author_name(author_name), keyword(keyword), price(price) {}
+            : isbn(isbn), author_name(author_name), keyword(keyword), price(price) {}
 };
 
-int BookNameIndexingCmp(const BookNameIndexingInfo &, const BookNameIndexingInfo &);
-
 struct AuthorNameIndexingInfo {
-    ConstLenStr<21> ISBN;
+    ConstLenStr<21> isbn;
     ConstLenStr<61> book_name;
     ConstLenStr<61> keyword;
     double price;
 
     AuthorNameIndexingInfo() = default;
 
-    AuthorNameIndexingInfo(const ConstLenStr<21> &ISBN, const ConstLenStr<61> &book_name,
+    AuthorNameIndexingInfo(const ConstLenStr<21> &isbn, const ConstLenStr<61> &book_name,
                            const ConstLenStr<61> &keyword, const double &price)
-            : ISBN(ISBN), book_name(book_name), keyword(keyword), price(price) {}
+            : isbn(isbn), book_name(book_name), keyword(keyword), price(price) {}
 };
 
-int AuthorNameIndexingCmp(const AuthorNameIndexingInfo &, const AuthorNameIndexingInfo &);
-
 struct KeywordIndexingInfo {
-    ConstLenStr<21> ISBN;
+    ConstLenStr<21> isbn;
     ConstLenStr<61> book_name;
     ConstLenStr<61> author_name;
     double price;
 
     KeywordIndexingInfo() = default;
 
-    KeywordIndexingInfo(const ConstLenStr<21> &ISBN, const ConstLenStr<61> &book_name,
+    KeywordIndexingInfo(const ConstLenStr<21> &isbn, const ConstLenStr<61> &book_name,
                         const ConstLenStr<61> &author_name, const double &price)
-            : ISBN(ISBN), book_name(book_name), author_name(author_name), price(price) {}
+            : isbn(isbn), book_name(book_name), author_name(author_name), price(price) {}
 };
 
-int KeywordIndexingCmp(const KeywordIndexingInfo &, const KeywordIndexingInfo &);
+template<class INDEXING>
+int NonISBNIndexingCmp(const INDEXING &, const INDEXING &);
 
 class Book {
 private:
-    ConstLenStr<21> ISBN;
+    ConstLenStr<21> isbn;
     ConstLenStr<61> book_name;
     ConstLenStr<61> author_name;
     ConstLenStr<61> keyword;
@@ -144,12 +140,12 @@ public:
 
     ~Book() = default;
 
-    Book(const ConstLenStr<21> &ISBN) : ISBN(ISBN), book_name(), author_name(), keyword(), price(0), storage(0) {}
+    Book(const ConstLenStr<21> &isbn) : isbn(isbn), book_name(), author_name(), keyword(), price(0), storage(0) {}
 
-    Book(const ConstLenStr<21> &ISBN, const ConstLenStr<61> &book_name,
+    Book(const ConstLenStr<21> &isbn, const ConstLenStr<61> &book_name,
          const ConstLenStr<61> &author_name, const ConstLenStr<61> &keyword,
          const double &price)
-            : ISBN(ISBN), book_name(book_name), author_name(author_name), keyword(keyword), price(price), storage(0) {}
+            : isbn(isbn), book_name(book_name), author_name(author_name), keyword(keyword), price(price), storage(0) {}
 
     friend class User;
 };
