@@ -28,6 +28,9 @@ int CmpStr(const ConstLenStr<length> &lhs,
            const ConstLenStr<length> &rhs);
 
 template<int length>
+std::ostream &operator<<(std::ostream &out, const ConstLenStr<length> &str1);
+
+template<int length>
 class ConstLenStr {
 private:
     char str[length] = {};
@@ -108,7 +111,15 @@ public:
         }
         return str[index];
     }
+
+    friend std::ostream &operator<<<length>(std::ostream &out, const ConstLenStr<length> &str1);
 };
+
+template<int length>
+std::ostream &operator<<(std::ostream &out, const ConstLenStr<length> &str1) {
+    out << str1.str;
+    return out;
+}
 
 template<int length>
 int CmpStr(const ConstLenStr<length> &lhs,

@@ -108,15 +108,15 @@ bool instructionScanner::IsKeyword(const std::string &token) {
 }
 
 bool instructionScanner::ModifyScan(const std::string &token) {
-    if (!modify_list[ISBN] && token.substr(0, 6) == "-ISBN" && token.size() > 6) {
+    if (!modify_list[ISBN] && token.substr(0, 6) == "-ISBN=" && token.size() > 6) {
         if (IsASCII(token.substr(6), ISBN)) {
             modify_list[ISBN] = true;
             return true;
         } else {
             return false;
         }
-    } else if (!modify_list[BOOK_NAME] && token.back() == '\"' && token.substr(0, 7) == "-name\"" && token.size() > 8) {
-        if (IsASCII(token.substr(7, token.size() - 1), BOOK_NAME)) {
+    } else if (!modify_list[BOOK_NAME] && token.back() == '\"' && token.substr(0, 7) == "-name=\"" && token.size() > 8) {
+        if (IsASCII(token.substr(7, token.size() - 8), BOOK_NAME)) {
             modify_list[BOOK_NAME] = true;
             return true;
         } else {
@@ -124,7 +124,7 @@ bool instructionScanner::ModifyScan(const std::string &token) {
         }
     } else if (!modify_list[AUTHOR_NAME] && token.back() == '\"' && token.substr(0, 9) == "-author=\"" &&
                token.size() > 10) {
-        if (IsASCII(token.substr(9, token.size() - 1), AUTHOR_NAME)) {
+        if (IsASCII(token.substr(9, token.size() - 10), AUTHOR_NAME)) {
             modify_list[AUTHOR_NAME] = true;
             return true;
         } else {
@@ -132,7 +132,7 @@ bool instructionScanner::ModifyScan(const std::string &token) {
         }
     }
     if (!modify_list[KEYWORD] && token.back() == '\"' && token.substr(0, 10) == "-keyword=\"" && token.size() > 11) {
-        if (IsKeyword(token)) {
+        if (IsKeyword(token.substr(10, token.size() - 11))) {
             modify_list[KEYWORD] = true;
             return true;
         } else {
@@ -140,7 +140,7 @@ bool instructionScanner::ModifyScan(const std::string &token) {
         }
     }
     if (!modify_list[PRICE] && token.substr(0, 7) == "-price=" && token.size() > 7) {
-        if (IsDouble(token, PRICE)) {
+        if (IsDouble(token.substr(7), PRICE)) {
             modify_list[PRICE] = true;
             return true;
         } else {
@@ -167,8 +167,9 @@ bool instructionScanner::Scan() {
             for (; tail < buffer.size(); tail++) {
                 if (buffer[tail] != ' ') break;
             }
-            if (token == "show" || token == "report") {
+            if (tail != buffer.size() && ((token == "show" && buffer[tail] == 'f') || token == "report")) {
                 token.push_back(' ');
+                token.push_back(buffer[tail]);
                 continue;
             }
             break;
@@ -206,7 +207,6 @@ bool instructionScanner::Scan() {
                         if (instr_type != SHOW && instr_type != SHOW_FINANCE)
                             return false;
                     } else {
-
                         return true;
                     }
                 } else if (tail == buffer.size()) return false;
@@ -223,7 +223,7 @@ bool instructionScanner::Scan() {
                     } else if (instr_type == DELETE) {
                         return IsUerData(token, USER_ID);
                     } else if (instr_type == SHOW) {
-                        if (token.substr(0, 6) == "-ISBN" && token.size() > 6) {
+                        if (token.substr(0, 6) == "-ISBN=" && token.size() > 6) {
                             if (IsASCII(token.substr(6), ISBN)) {
                                 factor_num = 1;
                                 show_what = ISBN;
@@ -231,7 +231,7 @@ bool instructionScanner::Scan() {
                             } else {
                                 return false;
                             }
-                        } else if (token.back() == '\"' && token.substr(0, 7) == "-name\"" && token.size() > 8) {
+                        } else if (token.back() == '\"' && token.substr(0, 7) == "-name=\"" && token.size() > 8) {
                             if (IsASCII(token.substr(7, token.size() - 1), BOOK_NAME)) {
                                 factor_num = 1;
                                 show_what = BOOK_NAME;
