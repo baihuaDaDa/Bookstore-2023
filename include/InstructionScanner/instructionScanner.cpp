@@ -1,6 +1,6 @@
 #include "instructionScanner.hpp"
 
-void instructionScanner::SetBuffer(const std::string &_buffer) {
+void InstructionScanner::SetBuffer(const std::string &_buffer) {
     buffer = _buffer;
     keyword_list.clear();
     factor_num = 0;
@@ -8,7 +8,7 @@ void instructionScanner::SetBuffer(const std::string &_buffer) {
         modify_list[i] = false;
 }
 
-bool instructionScanner::IsInteger(const std::string &token, InfoType info_type) {
+bool InstructionScanner::IsInteger(const std::string &token, InfoType info_type) {
     int max_len, tmp = 0;
     if (info_type == PRIVILEGE) max_len = 1;
     if (info_type == QUANTITY) max_len = 10;
@@ -24,7 +24,7 @@ bool instructionScanner::IsInteger(const std::string &token, InfoType info_type)
     return true;
 }
 
-bool instructionScanner::IsDouble(const std::string &token, InfoType info_type) {
+bool InstructionScanner::IsDouble(const std::string &token, InfoType info_type) {
     double tmp = 0;
     int after_dot_cnt = 1;
     const int max_len = 13;
@@ -48,7 +48,7 @@ bool instructionScanner::IsDouble(const std::string &token, InfoType info_type) 
     return true;
 }
 
-bool instructionScanner::IsUerData(const std::string &token, InfoType info_type) {
+bool InstructionScanner::IsUerData(const std::string &token, InfoType info_type) {
     const int max_len = 30;
     if (token.size() > max_len) return false;
     for (int i = 0; i < token.size(); i++) {
@@ -61,7 +61,7 @@ bool instructionScanner::IsUerData(const std::string &token, InfoType info_type)
     return true;
 }
 
-bool instructionScanner::IsASCII(const std::string &token, InfoType info_type) {
+bool InstructionScanner::IsASCII(const std::string &token, InfoType info_type) {
     int max_len;
     bool ban_quote = false;
     bool ban_line = false;
@@ -85,7 +85,7 @@ bool instructionScanner::IsASCII(const std::string &token, InfoType info_type) {
     return true;
 }
 
-bool instructionScanner::IsKeyword(const std::string &token) {
+bool InstructionScanner::IsKeyword(const std::string &token) {
     const int max_len = 60;
     ConstLenStr<61> tmp = {};
     if (token.size() > max_len) return false;
@@ -103,11 +103,15 @@ bool instructionScanner::IsKeyword(const std::string &token) {
             tmp.Append(token[i]);
         }
     }
+    for (auto iter = keyword_list.begin(); iter != keyword_list.end(); iter++) {
+        if (*iter == tmp) return false;
+    }
+    keyword_list.push_back(tmp);
     keyword = ConstLenStr<61>(token);
     return true;
 }
 
-bool instructionScanner::ModifyScan(const std::string &token) {
+bool InstructionScanner::ModifyScan(const std::string &token) {
     if (!modify_list[ISBN] && token.substr(0, 6) == "-ISBN=" && token.size() > 6) {
         if (IsASCII(token.substr(6), ISBN)) {
             modify_list[ISBN] = true;
@@ -151,7 +155,7 @@ bool instructionScanner::ModifyScan(const std::string &token) {
     }
 }
 
-bool instructionScanner::Scan() {
+bool InstructionScanner::Scan() {
     int head = 0;
     for (; head < buffer.size(); head++) {
         if (buffer[head] != ' ') break;
@@ -232,7 +236,7 @@ bool instructionScanner::Scan() {
                                 return false;
                             }
                         } else if (token.back() == '\"' && token.substr(0, 7) == "-name=\"" && token.size() > 8) {
-                            if (IsASCII(token.substr(7, token.size() - 1), BOOK_NAME)) {
+                            if (IsASCII(token.substr(7, token.size() - 8), BOOK_NAME)) {
                                 factor_num = 1;
                                 show_what = BOOK_NAME;
                                 return true;
@@ -240,7 +244,7 @@ bool instructionScanner::Scan() {
                                 return false;
                             }
                         } else if (token.back() == '\"' && token.substr(0, 9) == "-author=\"" && token.size() > 10) {
-                            if (IsASCII(token.substr(9, token.size() - 1), AUTHOR_NAME)) {
+                            if (IsASCII(token.substr(9, token.size() - 10), AUTHOR_NAME)) {
                                 factor_num = 1;
                                 show_what = AUTHOR_NAME;
                                 return true;
@@ -248,7 +252,7 @@ bool instructionScanner::Scan() {
                                 return false;
                             }
                         } else if (token.back() == '\"' && token.substr(0, 10) == "-keyword=\"" && token.size() > 11) {
-                            if (IsASCII(token.substr(10, token.size() - 1), SINGLE_KEYWORD)) {
+                            if (IsASCII(token.substr(10, token.size() - 11), SINGLE_KEYWORD)) {
                                 factor_num = 1;
                                 show_what = SINGLE_KEYWORD;
                                 return true;
@@ -331,7 +335,7 @@ bool instructionScanner::Scan() {
                     if (instr_type == REGISTER) {
                         return IsASCII(token, USERNAME);
                     } else if (instr_type == PASSWD) {
-                        if (IsASCII(token, NEW_PASSWORD)) {
+                        if (IsUerData(token, NEW_PASSWORD)) {
                             factor_num = 3;
                             return true;
                         } else {

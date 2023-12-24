@@ -117,7 +117,9 @@ public:
 
 template<int length>
 std::ostream &operator<<(std::ostream &out, const ConstLenStr<length> &str1) {
-    out << str1.str;
+    for (size_t i = 0; i < str1.size; i++) {
+        out << str1.str[i];
+    }
     return out;
 }
 

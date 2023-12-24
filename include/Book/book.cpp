@@ -10,35 +10,17 @@ int ISBNIndexingCmp(const ISBNIndexingInfo &lhs, const ISBNIndexingInfo &rhs) {
     int flag_keyword = CmpStr(lhs.keyword, rhs.keyword);
     if (flag_keyword < 0) return -1;
     if (flag_keyword > 0) return 1;
+    if (lhs.price < rhs.price) return -1;
+    if (lhs.price > rhs.price) return 1;
+    if (lhs.storage < rhs.storage) return -1;
+    if (lhs.storage > rhs.storage) return 1;
     return 0;
 }
 
 std::ostream &operator<<(std::ostream &out, const ISBNIndexingInfo &info) {
-    out << info.book_name << '\t' << info.author_name << '\t' << info.keyword;
+    out << info.book_name << '\t' << info.author_name << '\t' << info.keyword << '\t'
+        << info.price << '\t' << info.storage;
     return out;
-}
-
-std::ostream &operator<<(std::ostream &out, const BookNameIndexingInfo &info) {
-    out << info.isbn << '\t' << info.author_name << '\t' << info.keyword << '\t';
-    return out;
-}
-
-std::ostream &operator<<(std::ostream &out, const AuthorNameIndexingInfo &info) {
-    out << info.isbn << '\t' << info.book_name << '\t' << info.keyword << '\t';
-    return out;
-}
-
-std::ostream &operator<<(std::ostream &out, const KeywordIndexingInfo &info) {
-    out << info.isbn << '\t' << info.book_name << '\t' << info.author_name << '\t';
-    return out;
-}
-
-template<class INDEXING>
-int NonISBNIndexingCmp(const INDEXING &lhs, const INDEXING &rhs) {
-    int flag_isbn = CmpStr(lhs.isbn, rhs.isbn);
-    if (flag_isbn < 0) return -1;
-    if (flag_isbn > 0) return 1;
-    return 0;
 }
 
 bool Book::operator==(const Book &book) {

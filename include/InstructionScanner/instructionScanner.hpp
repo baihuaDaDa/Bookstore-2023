@@ -45,7 +45,7 @@ enum InstrType {
     EMPTY
 };
 
-class instructionScanner {
+class InstructionScanner {
 private:
     std::string buffer;
 
@@ -71,9 +71,9 @@ public:
     double total_cost;
     int count;
 
-    instructionScanner() = default;
+    InstructionScanner() = default;
 
-    ~instructionScanner() = default;
+    ~InstructionScanner() = default;
 
     void SetBuffer(const std::string &_buffer);
 

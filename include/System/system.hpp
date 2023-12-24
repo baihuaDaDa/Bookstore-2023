@@ -9,16 +9,15 @@
 class System {
 private:
     bool if_exit = false;
-    instructionScanner scanner;
+    InstructionScanner scanner;
     int time = 0;
     int finance_count = 0;
     std::vector<Pair<User, Book>> user_list; // user和select绑定
     memory<ConstLenStr<31>, UserInfo, CmpStr, CmpUserInfo> user_memory;
     memory<ConstLenStr<21>, ISBNIndexingInfo, CmpStr, ISBNIndexingCmp> isbn_memory;
-    memory<ConstLenStr<61>, BookNameIndexingInfo, CmpStr, NonISBNIndexingCmp> book_name_memory;
-    memory<ConstLenStr<61>, AuthorNameIndexingInfo, CmpStr, NonISBNIndexingCmp> author_name_memory;
-    memory<ConstLenStr<61>, KeywordIndexingInfo, CmpStr, NonISBNIndexingCmp> keyword_memory;
-    memory<ConstLenStr<21>, TradeInfo, >
+    memory<ConstLenStr<61>, ConstLenStr<21>, CmpStr, CmpStr> book_name_memory;
+    memory<ConstLenStr<61>, ConstLenStr<21>, CmpStr, CmpStr> author_name_memory;
+    memory<ConstLenStr<61>, ConstLenStr<21>, CmpStr, CmpStr> keyword_memory;
     memoryRiver<Finance, 1> finance_memory; // 文件头存储记录条数
     memoryRiver<FinanceRecord, 0> finance_report_memory;
     memory<ConstLenStr<31>, EmployeeWork, CmpStr, CmpEmployeeWork> employee_work_memory; // 以用户ID为索引
