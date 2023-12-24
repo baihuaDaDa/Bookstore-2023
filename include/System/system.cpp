@@ -1,11 +1,11 @@
 #include "system.hpp"
 
-void System::initialise() {
+void System::Initialise() {
     if (time == 0) {
         User shopkeeper = User("root", UserInfo("sjtu", "baihua", SHOPKEEPER));
         user_memory.Insert(shopkeeper.ID, shopkeeper.user_info);
         time++;
-        LogRecord new_log = LogRecord(time, ConstLenStr<280>("initialise shopkeeper baihua\n"));
+        LogRecord new_log = LogRecord(time, ConstLenStr<280>("Initialise shopkeeper baihua\n"));
         log_memory.write(new_log);
         log_memory.write_info(time, 1);
     }
@@ -423,6 +423,7 @@ void System::ReportEmployee() {
 void System::GetInstruction() {
     std::string _buffer;
     getline(std::cin, _buffer);
+    std::cout << _buffer << '\n';
     scanner.SetBuffer(_buffer);
 }
 

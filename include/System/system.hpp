@@ -57,7 +57,7 @@ public:
         log_memory.get_info(time, 1);
     }
 
-    void initialise();
+    void Initialise();
 
     void Su();
 
