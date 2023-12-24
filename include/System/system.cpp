@@ -246,6 +246,7 @@ void System::Modify() {
         if (book == Book()) {
             std::cout << "Invalid\n";
         } else {
+            isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
             if (scanner.modify_list[ISBN]) {
                 if (book.isbn == scanner.isbn) {
                     std::cout << "Invalid\n";
@@ -256,7 +257,6 @@ void System::Modify() {
                     std::cout << "Invalid\n";
                     return;
                 }
-                const int max_len = 60;
                 ConstLenStr<61> tmp = {};
                 for (int i = 0; i < book.isbn_indexing_info.keyword.GetSize(); i++) {
                     if (book.isbn_indexing_info.keyword[i] == '|') {
@@ -266,7 +266,6 @@ void System::Modify() {
                         tmp.Append(book.isbn_indexing_info.keyword[i]);
                     }
                 }
-                isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
                 if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
                     book_name_memory.Delete(book.isbn_indexing_info.book_name, book.isbn);
                 if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
@@ -277,78 +276,64 @@ void System::Modify() {
                     }
                 }
             }
-        }
-        if (scanner.modify_list[BOOK_NAME]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
-                if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
-                    book_name_memory.Delete(book.isbn_indexing_info.book_name, book.isbn);
+            if (scanner.modify_list[BOOK_NAME]) {
+                if (!scanner.modify_list[ISBN]) {
+                    if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
+                        book_name_memory.Delete(book.isbn_indexing_info.book_name, book.isbn);
+                }
+                book.isbn_indexing_info.book_name = scanner.book_name;
             }
-            book.isbn_indexing_info.book_name = scanner.book_name;
-        }
-        if (scanner.modify_list[AUTHOR_NAME]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
-                if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
-                    author_name_memory.Delete(book.isbn_indexing_info.author_name, book.isbn);
+            if (scanner.modify_list[AUTHOR_NAME]) {
+                if (!scanner.modify_list[ISBN]) {
+                    if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
+                        author_name_memory.Delete(book.isbn_indexing_info.author_name, book.isbn);
+                }
+                book.isbn_indexing_info.author_name = scanner.author_name;
             }
-            book.isbn_indexing_info.author_name = scanner.author_name;
-        }
-        if (scanner.modify_list[KEYWORD]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
-                const int max_len = 60;
-                ConstLenStr<61> tmp = {};
-                for (int i = 0; i < book.isbn_indexing_info.keyword.GetSize(); i++) {
-                    if (book.isbn_indexing_info.keyword[i] == '|') {
-                        keyword_memory.Delete(tmp, book.isbn);
-                        tmp.Clear();
-                    } else {
-                        tmp.Append(book.isbn_indexing_info.keyword[i]);
+            if (scanner.modify_list[KEYWORD]) {
+                if (!scanner.modify_list[ISBN]) {
+                    const int max_len = 60;
+                    ConstLenStr<61> tmp = {};
+                    for (int i = 0; i < book.isbn_indexing_info.keyword.GetSize(); i++) {
+                        if (book.isbn_indexing_info.keyword[i] == '|') {
+                            keyword_memory.Delete(tmp, book.isbn);
+                            tmp.Clear();
+                        } else {
+                            tmp.Append(book.isbn_indexing_info.keyword[i]);
+                        }
                     }
                 }
+                book.isbn_indexing_info.keyword = scanner.keyword;
             }
-            book.isbn_indexing_info.keyword = scanner.keyword;
-        }
-        if (scanner.modify_list[PRICE]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Delete(book.isbn, book.isbn_indexing_info);
-            }
-            book.isbn_indexing_info.price = scanner.price;
-        }
-        if (scanner.modify_list[ISBN]) {
-            for (auto iter = scanner.keyword_list.begin(); iter != scanner.keyword_list.end(); iter++) {
-                keyword_memory.Insert(*iter, book.isbn);
+            if (scanner.modify_list[PRICE]) {
+                book.isbn_indexing_info.price = scanner.price;
             }
             isbn_memory.Insert(book.isbn, book.isbn_indexing_info);
-            if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
-                book_name_memory.Insert(book.isbn_indexing_info.book_name, book.isbn);
-            if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
-                author_name_memory.Insert(book.isbn_indexing_info.author_name, book.isbn);
-        }
-        if (scanner.modify_list[BOOK_NAME]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Insert(book.isbn, book.isbn_indexing_info);
-                book_name_memory.Insert(book.isbn_indexing_info.book_name, book.isbn);
-            }
-        }
-        if (scanner.modify_list[AUTHOR_NAME]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Insert(book.isbn, book.isbn_indexing_info);
-                author_name_memory.Insert(book.isbn_indexing_info.author_name, book.isbn);
-            }
-        }
-        if (scanner.modify_list[KEYWORD]) {
-            if (!scanner.modify_list[ISBN]) {
+            if (scanner.modify_list[ISBN]) {
                 for (auto iter = scanner.keyword_list.begin(); iter != scanner.keyword_list.end(); iter++) {
                     keyword_memory.Insert(*iter, book.isbn);
                 }
-                isbn_memory.Insert(book.isbn, book.isbn_indexing_info);
+                if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
+                    book_name_memory.Insert(book.isbn_indexing_info.book_name, book.isbn);
+                if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
+                    author_name_memory.Insert(book.isbn_indexing_info.author_name, book.isbn);
             }
-        }
-        if (scanner.modify_list[PRICE]) {
-            if (!scanner.modify_list[ISBN]) {
-                isbn_memory.Insert(book.isbn, book.isbn_indexing_info);
+            if (scanner.modify_list[BOOK_NAME]) {
+                if (!scanner.modify_list[ISBN]) {
+                    book_name_memory.Insert(book.isbn_indexing_info.book_name, book.isbn);
+                }
+            }
+            if (scanner.modify_list[AUTHOR_NAME]) {
+                if (!scanner.modify_list[ISBN]) {
+                    author_name_memory.Insert(book.isbn_indexing_info.author_name, book.isbn);
+                }
+            }
+            if (scanner.modify_list[KEYWORD]) {
+                if (!scanner.modify_list[ISBN]) {
+                    for (auto iter = scanner.keyword_list.begin(); iter != scanner.keyword_list.end(); iter++) {
+                        keyword_memory.Insert(*iter, book.isbn);
+                    }
+                }
             }
         }
     }
