@@ -13,7 +13,7 @@ struct Pair {
 
     Pair() : index(), value() {}
 
-    Pair(INDEX index, VALUE value) : index(index), value(value) {}
+    Pair(const INDEX &index, const VALUE &value) : index(index), value(value) {}
 };
 
 template<class INDEX, class VALUE,
@@ -35,7 +35,7 @@ private:
 
         BlockNode() : element(), address(-1), size(0), pre(-1), next(-1) {}
 
-        BlockNode(Pair<INDEX, VALUE> element, int address, int size, int pre, int next) : element(element), address(address), size(size), pre(pre), next(next) {}
+        BlockNode(const Pair<INDEX, VALUE> &element, int address, int size, int pre, int next) : element(element), address(address), size(size), pre(pre), next(next) {}
 
         ~BlockNode() = default;
 
@@ -304,7 +304,7 @@ public:
         Pair<INDEX, VALUE> data[SIZE_OF_BLOCK] = {};
         int i;
         bool flag;
-        while (pos != tail_pos) { // 此处冗余，多搜索了一块，后续可优化
+        while (pos != tail_pos) {
             flag = false;
             memory_BlockNode.read(now, pos);
             file.open(element_file_name, std::ios::in);
@@ -321,6 +321,26 @@ public:
             }
             if (i != now.size) {
                 break;
+            }
+            pos = now.next;
+        }
+        return out;
+    }
+
+    void Output() {
+        memory_BlockNode.read(head, head_pos);
+        int pos = head.next;
+        BlockNode now;
+        fstream file;
+        Pair<INDEX, VALUE> data[SIZE_OF_BLOCK] = {};
+        while (pos != tail_pos) {
+            memory_BlockNode.read(now, pos);
+            file.open(element_file_name, std::ios::in);
+            file.seekg(now.address);
+            file.read(reinterpret_cast<char *>(data), sizeof(Pair<INDEX, VALUE>) * now.size);
+            file.close();
+            for (int i = 0; i < now.size; i++) {
+                std::cout << data[i].index << '\t' << data[i].value << '\n';
             }
             pos = now.next;
         }
