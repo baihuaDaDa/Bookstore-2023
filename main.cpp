@@ -3,7 +3,7 @@
 
 int main() {
     std::cout << std::fixed << std::setprecision(2);
-    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/robust/testcase4.in", "r", stdin);
+//    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/robust/testcase4.in", "r", stdin);
 //    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/robust/testcase4.out", "w", stdout);
 //    System system("database/UserIndex.bin", "database/UserElement.bin",
 //                  "database/ISBNIndex.bin", "database/ISBNElement.bin",
