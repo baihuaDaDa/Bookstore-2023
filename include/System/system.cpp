@@ -250,6 +250,11 @@ void System::Modify() {
                 if (book.isbn == scanner.isbn) {
                     std::cout << "Invalid\n";
                 } else {
+                    std::vector<Pair<ConstLenStr<21>, ISBNIndexingInfo>> data_isbn = isbn_memory.Find(scanner.isbn);
+                    if (!data_isbn.empty()) {
+                        std::cout << "Invalid\n";
+                        return;
+                    }
                     const int max_len = 60;
                     ConstLenStr<61> tmp = {};
                     for (int i = 0; i < book.isbn_indexing_info.keyword.GetSize(); i++) {
@@ -499,5 +504,5 @@ void System::Execute() {
 }
 
 bool System::Exit() const {
-    return if_exit;
+    return (if_exit || std::cin.eof());
 }

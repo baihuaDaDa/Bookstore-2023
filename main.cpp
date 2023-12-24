@@ -2,9 +2,9 @@
 #include <iomanip>
 
 int main() {
-//    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/basic/testcase7/3.in", "r", stdin);
-//    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/basic/testcase7/3.out", "w", stdout);
     std::cout << std::fixed << std::setprecision(2);
+//    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/robust/testcase1.in", "r", stdin);
+//    freopen("/mnt/c/Users/zwg_w/Desktop/CLion/OJ Homework_big/5-Bookstore/Bookstore-2023/data/robust/testcase1.out", "w", stdout);
 //    System system("database/UserIndex.bin", "database/UserElement.bin",
 //                  "database/ISBNIndex.bin", "database/ISBNElement.bin",
 //                  "database/BookNameIndex.bin", "database/BookNameElement.bin",
