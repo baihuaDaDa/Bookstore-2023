@@ -10,7 +10,7 @@ int CmpUserInfo(const UserInfo &lhs, const UserInfo &rhs) {
     return 0;
 }
 
-int CmpEmployeeWork(const EmployeeWork &lhs, const EmployeeWork &rhs) {
+int CmpLogRecord(const LogRecord &lhs, const LogRecord &rhs) {
     if (lhs.time < rhs.time) return -1;
     if (lhs.time > rhs.time) return 1;
     return 0;

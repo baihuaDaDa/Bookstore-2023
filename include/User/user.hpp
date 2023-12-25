@@ -43,25 +43,16 @@ struct FinanceRecord {
     FinanceRecord(int time, const ConstLenStr<40> &finance_record) : time(time), finance_record(finance_record) {}
 };
 
-struct EmployeeWork {
+struct LogRecord {
     int time = 0;
     ConstLenStr<280> work_record;
 
-    EmployeeWork() = default;
-
-    EmployeeWork(int time, ConstLenStr<280> &work_record) : time(time), work_record(work_record) {}
-};
-
-int CmpEmployeeWork(const EmployeeWork &, const EmployeeWork &);
-
-struct LogRecord {
-    int time = 0;
-    ConstLenStr<280> log_record;
-
     LogRecord() = default;
 
-    LogRecord(int time, const ConstLenStr<280> &log_record) : time(time), log_record(log_record) {}
+    LogRecord(int time, const ConstLenStr<280> &work_record) : time(time), work_record(work_record) {}
 };
+
+int CmpLogRecord(const LogRecord &, const LogRecord &);
 
 class User {
 private:

@@ -51,6 +51,7 @@ private:
 
 public:
     // 可供调用的合法数据块
+    std::string simplified_buffer = {};
     InstrType instr_type;
     int factor_num = 0; // 参数个数
     ConstLenStr<31> ID;

@@ -19,9 +19,9 @@ private:
     memory<ConstLenStr<61>, ConstLenStr<21>, CmpStr, CmpStr> author_name_memory;
     memory<ConstLenStr<61>, ConstLenStr<21>, CmpStr, CmpStr> keyword_memory;
     memoryRiver<Finance, 1> finance_memory; // 文件头存储记录条数
-    memoryRiver<FinanceRecord, 0> finance_report_memory;
-    memory<ConstLenStr<31>, EmployeeWork, CmpStr, CmpEmployeeWork> employee_work_memory; // 以用户ID为索引
-    memoryRiver<LogRecord, 1> log_memory;
+    memoryRiver<Pair<ConstLenStr<31>, FinanceRecord>, 0> finance_report_memory;
+    memory<ConstLenStr<31>, LogRecord, CmpStr, CmpLogRecord> employee_work_memory; // 以用户ID为索引
+    memoryRiver<Pair<ConstLenStr<31>, LogRecord>, 1> log_memory;
 
 public:
     System() = default;
@@ -55,6 +55,7 @@ public:
         }
         finance_memory.get_info(finance_count, 1);
         log_memory.get_info(time, 1);
+        finance_memory.get_info(finance_count, 1);
     }
 
     void Initialise();
@@ -93,7 +94,7 @@ public:
 
     void Execute();
 
-    bool Exit() const;
+    bool Exit();
 };
 
 #endif //BOOKSTORE_2023_SYSTEM_HPP

@@ -4,6 +4,7 @@ void InstructionScanner::SetBuffer(const std::string &_buffer) {
     buffer = _buffer;
     keyword_list.clear();
     factor_num = 0;
+    simplified_buffer.clear();
     for (int i = 0; i < 5; i++)
         modify_list[i] = false;
 }
@@ -199,6 +200,7 @@ bool InstructionScanner::Scan() {
     else if (token == "quit") instr_type = QUIT;
     else if (token == "exit") instr_type = EXIT;
     else return false;
+    simplified_buffer += token;
     int token_cnt = 0;
     while (token_cnt <= 5) {
         switch (token_cnt) {
@@ -410,5 +412,7 @@ bool InstructionScanner::Scan() {
             }
         }
         token_cnt++;
+        simplified_buffer += ' ';
+        simplified_buffer += token;
     }
 }
