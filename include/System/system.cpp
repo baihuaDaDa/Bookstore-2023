@@ -600,11 +600,13 @@ void System::Log() {
                 (user_list.empty() ? "Visitor" : user_list.back().index.ID), new_log);
         log_memory.write(new_user_log_record);
     } else {
+        std::cout << "-----Log-----" << '\n';
         Pair<ConstLenStr<31>, LogRecord> log_info;
         for (int i = 1; i <= time; i++) {
             log_memory.read(log_info, (i - 1) * sizeof(Pair<ConstLenStr<31>, LogRecord>) + sizeof(int));
-            std::cout << "Time: " << log_info.value.time << '\n' << "User: " << log_info.index << '\n' << "Operation: " << log_info.value.work_record << '\n';
+            std::cout << "Time: " << log_info.value.time << '\t' << "User: " << log_info.index << '\t' << "Operation: " << log_info.value.work_record << '\n';
         }
+        std::cout << "-------------" << '\n';
         LogRecord new_log = LogRecord(++time, ConstLenStr<280>(scanner.simplified_buffer));
         Pair<ConstLenStr<31>, LogRecord> new_user_log_record = Pair<ConstLenStr<31>, LogRecord>(
                 user_list.back().index.ID, new_log);
@@ -620,11 +622,13 @@ void System::ReportFinance() {
                 (user_list.empty() ? "Visitor" : user_list.back().index.ID), new_log);
         log_memory.write(new_user_log_record);
     } else {
+        std::cout << "-----Finance Report-----" << '\n';
         Pair<ConstLenStr<31>, FinanceRecord> finance_info;
         for (int i = 1; i <= finance_count; i++) {
             finance_report_memory.read(finance_info, (i - 1) * sizeof(Pair<ConstLenStr<31>, FinanceRecord>));
-            std::cout << "Time: " << finance_info.value.time << '\n' << "User: " << finance_info.index << '\n' << "Operation: " << finance_info.value.finance_record << '\n';
+            std::cout << "Time: " << finance_info.value.time << '\t' << "User: " << finance_info.index << '\t' << "Operation: " << finance_info.value.finance_record << '\n';
         }
+        std::cout << "------------------------" << '\n';
         LogRecord new_log = LogRecord(++time, ConstLenStr<280>(scanner.simplified_buffer));
         Pair<ConstLenStr<31>, LogRecord> new_user_log_record = Pair<ConstLenStr<31>, LogRecord>(
                 user_list.back().index.ID, new_log);
@@ -639,6 +643,7 @@ void memory<ConstLenStr<31>, LogRecord, CmpStr, CmpLogRecord>::Output() {
     BlockNode now;
     fstream file;
     Pair<ConstLenStr<31>, LogRecord> data[SIZE_OF_BLOCK] = {};
+    ConstLenStr<31> user_ID = {};
     while (pos != tail_pos) {
         memory_BlockNode.read(now, pos);
         file.open(element_file_name, std::ios::in);
@@ -646,7 +651,9 @@ void memory<ConstLenStr<31>, LogRecord, CmpStr, CmpLogRecord>::Output() {
         file.read(reinterpret_cast<char *>(data), sizeof(Pair<ConstLenStr<31>, LogRecord>) * now.size);
         file.close();
         for (int i = 0; i < now.size; i++) {
-            std::cout << "Time: " << data[i].value.time << '\n' << "User: " << data[i].index << '\n' << "Operation: " << data[i].value.work_record << '\n';
+            if (!(data[i].index == user_ID)) std::cout << "Employee: " << data[i].index << '\n';
+            std::cout << "Time: " << data[i].value.time << '\t' << "Operation: " << data[i].value.work_record << '\n';
+            user_ID = data[i].index;
         }
         pos = now.next;
     }
@@ -660,7 +667,9 @@ void System::ReportEmployee() {
                 (user_list.empty() ? "Visitor" : user_list.back().index.ID), new_log);
         log_memory.write(new_user_log_record);
     } else {
+        std::cout << "-----Employee Report-----" << '\n';
         employee_work_memory.Output();
+        std::cout << "-------------------------" << '\n';
         LogRecord new_log = LogRecord(++time, ConstLenStr<280>(scanner.simplified_buffer));
         Pair<ConstLenStr<31>, LogRecord> new_user_log_record = Pair<ConstLenStr<31>, LogRecord>(
                 user_list.back().index.ID, new_log);
@@ -743,6 +752,10 @@ void System::Execute() {
 
 bool System::Exit() {
     if (if_exit || std::cin.eof()) {
+        LogRecord new_log = LogRecord(++time, ConstLenStr<280>("Exit"));
+        Pair<ConstLenStr<31>, LogRecord> new_user_log_record = Pair<ConstLenStr<31>, LogRecord>(
+                (user_list.empty() ? "Visitor" : user_list.back().index.ID), new_log);
+        log_memory.write(new_user_log_record);
         log_memory.write_info(time, 1);
         finance_memory.write_info(finance_count, 1);
         return true;
