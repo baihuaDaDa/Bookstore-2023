@@ -5,7 +5,7 @@ void System::Initialise() {
         User shopkeeper = User("root", UserInfo("sjtu", "baihua", SHOPKEEPER));
         user_memory.Insert(shopkeeper.ID, shopkeeper.user_info);
         time++;
-        LogRecord new_log = LogRecord(time, ConstLenStr<280>("Initialise shopkeeper baihua\n"));
+        LogRecord new_log = LogRecord(time, ConstLenStr<280>("initialise shopkeeper baihua\n"));
         log_memory.write(new_log);
         log_memory.write_info(time, 1);
     }
@@ -266,6 +266,7 @@ void System::Modify() {
                         tmp.Append(book.isbn_indexing_info.keyword[i]);
                     }
                 }
+                keyword_memory.Delete(tmp, book.isbn);
                 if (!(book.isbn_indexing_info.book_name == ConstLenStr<61>()))
                     book_name_memory.Delete(book.isbn_indexing_info.book_name, book.isbn);
                 if (!(book.isbn_indexing_info.author_name == ConstLenStr<61>()))
@@ -292,7 +293,6 @@ void System::Modify() {
             }
             if (scanner.modify_list[KEYWORD]) {
                 if (!scanner.modify_list[ISBN]) {
-                    const int max_len = 60;
                     ConstLenStr<61> tmp = {};
                     for (int i = 0; i < book.isbn_indexing_info.keyword.GetSize(); i++) {
                         if (book.isbn_indexing_info.keyword[i] == '|') {
@@ -302,6 +302,7 @@ void System::Modify() {
                             tmp.Append(book.isbn_indexing_info.keyword[i]);
                         }
                     }
+                    keyword_memory.Delete(tmp, book.isbn);
                 }
                 book.isbn_indexing_info.keyword = scanner.keyword;
             }
@@ -423,7 +424,7 @@ void System::ReportEmployee() {
 void System::GetInstruction() {
     std::string _buffer;
     getline(std::cin, _buffer);
-    std::cout << _buffer << '\n';
+//    std::cout << _buffer << '\n';
     scanner.SetBuffer(_buffer);
 }
 

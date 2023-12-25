@@ -105,7 +105,7 @@ public:
         }
         if (!memory_element.file_exist()) {
             memory_element.initialise();
-        } // Check if the file exist. If not, then Initialise it.
+        } // Check if the file exist. If not, then initialise it.
         memory_BlockNode.read(head, head_pos);
         memory_BlockNode.read(tail, tail_pos);
         memory_BlockNode.get_info(num_of_block, 1);
